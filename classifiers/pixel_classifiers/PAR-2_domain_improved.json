@@ -1,0 +1,209 @@
+{
+  "pixel_classifier_type": "OpenCVPixelClassifier",
+  "metadata": {
+    "inputPadding": 0,
+    "inputResolution": {
+      "pixelWidth": {
+        "value": 0.15093537671658802,
+        "unit": "µm"
+      },
+      "pixelHeight": {
+        "value": 0.15093537671658802,
+        "unit": "µm"
+      },
+      "zSpacing": {
+        "value": 1.0,
+        "unit": "µm"
+      },
+      "timeUnit": "SECONDS",
+      "timepoints": []
+    },
+    "inputWidth": 512,
+    "inputHeight": 512,
+    "inputNumChannels": 3,
+    "outputType": "CLASSIFICATION",
+    "outputChannels": [
+      {
+        "name": "Ignore*",
+        "color": 16776702
+      },
+      {
+        "name": "PAR-2",
+        "color": -65536
+      }
+    ],
+    "classificationLabels": {
+      "0": {
+        "name": "Ignore*",
+        "color": [
+          180,
+          180,
+          180
+        ]
+      },
+      "1": {
+        "name": "PAR-2",
+        "color": [
+          255,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "op": {
+    "type": "data.op.channels",
+    "colorTransforms": [
+      {
+        "channelName": "eGFP"
+      }
+    ],
+    "op": {
+      "type": "op.core.sequential",
+      "ops": [
+        {
+          "type": "op.core.sequential",
+          "ops": [
+            {
+              "type": "op.core.sequential",
+              "ops": [
+                {
+                  "type": "op.normalize.local",
+                  "sigmaMean": 4.0,
+                  "sigmaStdDev": 0.0
+                },
+                {
+                  "type": "op.core.split-merge",
+                  "ops": [
+                    {
+                      "type": "op.filters.multiscale",
+                      "features": [
+                        "GAUSSIAN",
+                        "LAPLACIAN",
+                        "WEIGHTED_STD_DEV",
+                        "GRADIENT_MAGNITUDE",
+                        "STRUCTURE_TENSOR_COHERENCE",
+                        "HESSIAN_EIGENVALUE_MIN"
+                      ],
+                      "sigmaX": 1.0,
+                      "sigmaY": 1.0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "op.ml.feature-preprocessor",
+              "preprocessor": {
+                "normalizer": {
+                  "offsets": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "scales": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "missingValue": 0.0
+                },
+                "inputLength": 6,
+                "outputLength": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "op.ml.opencv-statmodel",
+          "model": {
+            "class": "ANN_MLP",
+            "statmodel": {
+              "opencv_ml_ann_mlp": {
+                "format": 3,
+                "layer_sizes": [
+                  6,
+                  2
+                ],
+                "activation_function": "SIGMOID_SYM",
+                "f_param1": 1.0,
+                "f_param2": 1.0,
+                "min_val": -9.4999999999999996e-01,
+                "max_val": 9.4999999999999996e-01,
+                "min_val1": -9.7999999999999998e-01,
+                "max_val1": 9.7999999999999998e-01,
+                "training_params": {
+                  "train_method": "RPROP",
+                  "dw0": 1.0000000000000001e-01,
+                  "dw_plus": 1.2000000000000000e+00,
+                  "dw_minus": 5.0000000000000000e-01,
+                  "dw_min": 1.1920928955078125e-07,
+                  "dw_max": 50.0,
+                  "term_criteria": {
+                    "epsilon": 1.0000000000000000e-02,
+                    "iterations": 1000
+                  }
+                },
+                "input_scale": [
+                  6.2403535500878862e-02,
+                  -1.2943280345890409e-01,
+                  1.2227093837183048e-01,
+                  2.9430042753459361e-02,
+                  1.0303687267892081e-01,
+                  -1.3217227600633914e+00,
+                  1.3103339990760596e-01,
+                  -5.6628655208042555e-01,
+                  5.2670247874793770e+00,
+                  -1.0548233251371562e+00,
+                  1.6804525730297878e-01,
+                  4.5307046262595113e-01
+                ],
+                "output_scale": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "inv_output_scale": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "weights": [
+                  [
+                    -1.1041384139240948e+00,
+                    1.4206965781643970e+00,
+                    -2.9603983337073075e-01,
+                    4.4367141341139432e-01,
+                    -1.8998788482771692e-01,
+                    1.3886577875581679e-01,
+                    -1.1024875891121733e+00,
+                    1.0564666791966004e+00,
+                    -2.8029270154401831e-01,
+                    1.2910836702681383e-01,
+                    -1.5076506824941799e-01,
+                    -1.0734506304542250e-01,
+                    3.6615212774218127e+00,
+                    -3.5067202646483016e+00
+                  ]
+                ]
+              }
+            }
+          },
+          "requestProbabilities": false
+        },
+        {
+          "type": "op.core.convert",
+          "pixelType": "UINT8"
+        }
+      ]
+    }
+  }
+}

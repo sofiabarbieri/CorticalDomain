@@ -1,0 +1,20 @@
+{
+  "pathClasses": [
+    {
+      "name": "Other",
+      "color": -14336
+    },
+    {
+      "name": "Ignore*",
+      "color": -4934476
+    },
+    {
+      "name": "PAR-2",
+      "color": -16744320
+    },
+    {
+      "name": "Embryo",
+      "color": -1800035
+    }
+  ]
+}
